@@ -3,6 +3,25 @@
     <app-setup-game theme="dark"></app-setup-game>
   </header>
   <main>
-    <app-card [imageId]="0" [visible]="false"></app-card>
+    <div class="info-bar">
+      <p>
+        <label>Current tries:</label>
+        <strong>X</strong>
+      </p>
+      <p>
+        <label>Best:</label>
+        <strong>X</strong>
+      </p>
+      <button>restart</button>
+    </div>
+    <ul class="cards">
+      <li *ngFor="let card of cards">
+        <app-card
+          [imageId]="card.id"
+          [visible]="card.visible"
+          [showNumbers]="true"
+        ></app-card>
+      </li>
+    </ul>
   </main>
 </div>

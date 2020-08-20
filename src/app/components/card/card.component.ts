@@ -10,6 +10,7 @@ export class CardComponent implements OnInit {
   emptySrc = '';
   @Input() imageId = 0;
   @Input() visible = false;
+  @Input() showNumbers = false; // debug
 
   ngOnInit(): void {
     this.imageSrc = this.getImageSrc(this.imageId + 1);

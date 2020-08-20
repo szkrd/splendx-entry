@@ -11,4 +11,8 @@ export class UtilsService {
     }
     return arr;
   }
+
+  simpleClone<T>(x: T): T {
+    return JSON.parse(JSON.stringify(x));
+  }
 }

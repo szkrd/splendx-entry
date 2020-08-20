@@ -1,5 +1,7 @@
 <div
   class="card-component"
   [class.visible]="visible"
-  [ngStyle]="{'background-image': visible ? imageSrc : emptySrc}">
+  [ngStyle]="{'background-image': visible ? imageSrc : emptySrc}"
+>
+  <label class="number" *ngIf="showNumbers">{{imageId}}</label>
 </div>
