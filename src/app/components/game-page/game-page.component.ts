@@ -1,4 +1,4 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Component, OnDestroy} from '@angular/core';
 import {animate, style, transition, trigger} from '@angular/animations';
 import {Subscription} from 'rxjs';
 import {Store} from '@ngrx/store';
@@ -23,43 +23,28 @@ const cardAnimStyle = [style({ opacity: 0, top: 30 }), style({ opacity: 1, top: 
     ])
   ]
 })
-export class GamePageComponent implements OnInit, OnDestroy {
+export class GamePageComponent implements OnDestroy {
   REVEAL_TIMEOUT = 1000;
   currentTries = 0;
   best = 0;
   cards: ICard[] = [];
   uiLocked = false;
   showSuccessMessage = false;
-  newGameSubscription: Subscription;
-  gameStateSubscription: Subscription;
+  gameStateChangeSubscription: Subscription;
   revealDoneTimeout: number;
 
   constructor(
     private store: Store<typeof rootReducer>
-    // private gameService: GameService
   ) {
-    // this.store.dispatch(gameActions.initNewGame({ deckSize: 3 }))
-    // this.currentTries$ = store.pipe(select([ 'game', 'tries' ]));
-    this.gameStateSubscription = store.select('game').subscribe(data => this.syncState(data));
-  }
-
-  ngOnInit() {
-    // this.syncState();
-    // this.newGameSubscription = this.gameService.newGameInitialized.subscribe(this.onNewGameInitialized);
+    this.gameStateChangeSubscription = store.select('game').subscribe(data => this.syncState(data));
   }
 
   ngOnDestroy() {
-    // this.newGameSubscription.unsubscribe();
-    this.gameStateSubscription.unsubscribe();
+    this.gameStateChangeSubscription.unsubscribe();
     if (this.revealDoneTimeout) {
       clearTimeout(this.revealDoneTimeout);
     }
   }
-
-  // onNewGameInitialized = () => {
-  //   this.showSuccessMessage = false;
-  //   this.syncState();
-  // }
 
   syncState = (state) => {
     this.currentTries = state.tries;
@@ -68,6 +53,10 @@ export class GamePageComponent implements OnInit, OnDestroy {
     const stateCards = state.cards.map(id => id).sort().join(',');
     if (localCards !== stateCards) {
       this.cards = state.cards.map(id => ({ id, visible: false }));
+    }
+    const isFreshGame = state.tries === 0;
+    if (isFreshGame) {
+      this.showSuccessMessage = false;
     }
   }
 

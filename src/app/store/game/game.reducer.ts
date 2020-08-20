@@ -1,8 +1,8 @@
 import {Action, createReducer, on} from '@ngrx/store';
 import {gameActions} from './game.actions';
 import {LocalStorageService} from '../../services/local-storage.service';
-import {EventEmitter} from '@angular/core';
-import {UtilsService} from '../../services/utils.service';
+import clone from '../../utils/clone';
+import arrayShuffle from '../../utils/array-shuffle';
 
 interface IHighScoreItem {
   deckSize: number;
@@ -21,8 +21,6 @@ class State {
 class StateManager {
   private state: State;
   private storage = new LocalStorageService('game-state');
-  private utils = new UtilsService(); // TODO use static methods?
-  newGameInitialized: EventEmitter<boolean> = new EventEmitter<boolean>();
 
   constructor(state: State) {
     this.state = state;
@@ -30,9 +28,7 @@ class StateManager {
   }
 
   getState(): State {
-    const newState = this.utils.simpleClone<State>(this.state);
-    newState.best = this.best;
-    return newState;
+    return clone<State>(this.state);
   }
 
   initNewGame(n = 0) {
@@ -43,9 +39,8 @@ class StateManager {
       cardIds.push(i);
       cardIds.push(i);
     }
-    this.state.cards = this.utils.arrayShuffle<number>(cardIds);
+    this.state.cards = arrayShuffle<number>(cardIds);
     this.saveState();
-    this.newGameInitialized.emit(true);
   }
 
   removeCard(id: number) {
@@ -61,7 +56,7 @@ class StateManager {
   saveHighScore() {
     const state = this.state;
     const { tries } = state;
-    const score = state.scores.find(item => item.deckSize === state.deckSize);
+    let score = state.scores.find(item => item.deckSize === state.deckSize);
     if (!score) {
       state.scores.push({ best: tries, deckSize: state.deckSize });
     } else {
@@ -69,16 +64,10 @@ class StateManager {
         score.best = tries;
       }
     }
+    // TODO cleanup
+    score = this.state.scores.find(item => item.deckSize === this.state.deckSize);
+    this.state.best = score ? score.best : 0;
     this.saveState();
-  }
-
-  get best() {
-    const state = this.state;
-    const score = state.scores.find(item => item.deckSize === state.deckSize);
-    if (!score) {
-      return 0;
-    }
-    return score.best;
   }
 
   private saveState() {
@@ -93,6 +82,8 @@ class StateManager {
 
 const initialState = new State();
 const stateManager = new StateManager(new State());
+
+// const storage = new LocalStorageService('game-state');
 
 const reducer = createReducer(
   initialState,
