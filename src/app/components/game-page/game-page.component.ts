@@ -1,7 +1,9 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {GameService} from '../../services/game.service';
-import {trigger, style, animate, transition} from '@angular/animations';
+import {animate, style, transition, trigger} from '@angular/animations';
 import {Subscription} from 'rxjs';
+import {Store} from '@ngrx/store';
+import {rootReducer} from '../../store/root-reducer';
+import {gameActions} from '../../store/game/game.actions';
 
 interface ICard {
   id: number;
@@ -22,35 +24,46 @@ const cardAnimStyle = [style({ opacity: 0, top: 30 }), style({ opacity: 1, top: 
   ]
 })
 export class GamePageComponent implements OnInit, OnDestroy {
+  REVEAL_TIMEOUT = 1000;
   currentTries = 0;
   best = 0;
   cards: ICard[] = [];
   uiLocked = false;
   showSuccessMessage = false;
   newGameSubscription: Subscription;
+  gameStateSubscription: Subscription;
+  revealDoneTimeout: number;
 
   constructor(
-    private gameService: GameService
-  ) { }
+    private store: Store<typeof rootReducer>
+    // private gameService: GameService
+  ) {
+    // this.store.dispatch(gameActions.initNewGame({ deckSize: 3 }))
+    // this.currentTries$ = store.pipe(select([ 'game', 'tries' ]));
+    this.gameStateSubscription = store.select('game').subscribe(data => this.syncState(data));
+  }
 
   ngOnInit() {
-    this.syncState();
-    this.newGameSubscription = this.gameService.newGameInitialized.subscribe(this.onNewGameInitialized);
+    // this.syncState();
+    // this.newGameSubscription = this.gameService.newGameInitialized.subscribe(this.onNewGameInitialized);
   }
 
   ngOnDestroy() {
-    this.newGameSubscription.unsubscribe();
+    // this.newGameSubscription.unsubscribe();
+    this.gameStateSubscription.unsubscribe();
+    if (this.revealDoneTimeout) {
+      clearTimeout(this.revealDoneTimeout);
+    }
   }
 
-  onNewGameInitialized = () => {
-    this.showSuccessMessage = false;
-    this.syncState();
-  }
+  // onNewGameInitialized = () => {
+  //   this.showSuccessMessage = false;
+  //   this.syncState();
+  // }
 
-  syncState() {
-    const { state } = this.gameService;
+  syncState = (state) => {
     this.currentTries = state.tries;
-    this.best = this.gameService.best;
+    this.best = state.best;
     const localCards = this.cards.map(card => card.id).sort().join(',');
     const stateCards = state.cards.map(id => id).sort().join(',');
     if (localCards !== stateCards) {
@@ -60,9 +73,8 @@ export class GamePageComponent implements OnInit, OnDestroy {
 
   onRestartClick() {
     this.showSuccessMessage = false;
-    this.gameService.initNewGame();
+    this.store.dispatch(gameActions.initNewGame({}));
     this.cards = [];
-    this.syncState();
   }
 
   onCardClick(card: ICard) {
@@ -74,24 +86,24 @@ export class GamePageComponent implements OnInit, OnDestroy {
     const matching = otherVisibleCard && otherVisibleCard.id === card.id;
     const finished = matching && this.cards.length === 2;
     if (otherVisibleCard) {
-      this.gameService.increaseTryCount();
+      this.store.dispatch(gameActions.increaseTryCount());
     }
     if (matching) {
       this.cards = this.cards.filter(item => item.id !== card.id);
-      this.gameService.removeCard(card.id);
+      this.store.dispatch(gameActions.removeCard({ id: card.id }));
       if (finished) {
         this.showSuccessMessage = true;
-        this.gameService.saveHighScore();
+        this.store.dispatch(gameActions.saveHighScore());
       }
     }
     if (!matching && otherVisibleCard) {
       this.uiLocked = true;
-      setTimeout(() => { // temporarily leave both cards visible
+      this.revealDoneTimeout = setTimeout(() => { // temporarily leave both cards visible
+        this.revealDoneTimeout = 0;
         this.uiLocked = false;
         otherVisibleCard.visible = false;
         card.visible = false;
-      }, this.gameService.REVEAL_TIMEOUT);
+      }, this.REVEAL_TIMEOUT);
     }
-    this.syncState();
   }
 }

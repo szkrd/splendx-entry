@@ -10,6 +10,8 @@ import { SetupGameComponent } from './components/setup-game/setup-game.component
 import { CardComponent } from './components/card/card.component';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import { HeaderLogoComponent } from './components/header-logo/header-logo.component';
+import { StoreModule } from '@ngrx/store';
+import {rootReducer} from './store/root-reducer';
 
 @NgModule({
   declarations: [
@@ -23,7 +25,8 @@ import { HeaderLogoComponent } from './components/header-logo/header-logo.compon
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
-    AppRoutingModule
+    AppRoutingModule,
+    StoreModule.forRoot(rootReducer)
   ],
   providers: [
     { provide: GameService }
