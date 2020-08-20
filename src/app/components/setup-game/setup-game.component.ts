@@ -23,6 +23,10 @@ export class SetupGameComponent {
 
   onStartClick() {
     this.gameService.setDeckSize(this.deckSize);
-    this.router.navigate(['/play']);
+    if (this.router.url === '/play') {
+      window.location.reload();
+    } else {
+      this.router.navigate(['/play']);
+    }
   }
 }

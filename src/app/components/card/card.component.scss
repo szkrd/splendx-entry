@@ -1,0 +1,15 @@
+.card-component {
+  width: 164px;
+  height: 164px;
+  border-radius: 10px;
+  background-size: 80%;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-color: #fff;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, .3);
+
+  &.visible {
+    background-color: rgba(0, 0, 0, .05);
+    box-shadow: 0 0 0 transparent;
+  }
+}

@@ -7,13 +7,15 @@ import { LandingPageComponent } from './components/landing-page/landing-page.com
 import { GamePageComponent } from './components/game-page/game-page.component';
 import {GameService} from './services/game.service';
 import { SetupGameComponent } from './components/setup-game/setup-game.component';
+import { CardComponent } from './components/card/card.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     LandingPageComponent,
     GamePageComponent,
-    SetupGameComponent
+    SetupGameComponent,
+    CardComponent
   ],
   imports: [
     BrowserModule,
