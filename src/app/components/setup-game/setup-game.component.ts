@@ -9,7 +9,7 @@ import {Router} from '@angular/router';
 })
 export class SetupGameComponent {
   deckSize: number = 10;
-
+  @Input() layout: 'vertical' | 'horizontal' = 'horizontal';
   @Input() theme: 'light' | 'dark' = 'light'
 
   constructor(

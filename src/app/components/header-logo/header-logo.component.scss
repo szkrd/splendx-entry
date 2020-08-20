@@ -1,0 +1,11 @@
+a {
+  display: block;
+  background-image: url("/assets/logo.svg");
+  background-size: contain;
+  width: 200px;
+  height: 50px;
+
+  span {
+    display: none;
+  }
+}

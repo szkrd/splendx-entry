@@ -9,6 +9,7 @@ import {GameService} from './services/game.service';
 import { SetupGameComponent } from './components/setup-game/setup-game.component';
 import { CardComponent } from './components/card/card.component';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
+import { HeaderLogoComponent } from './components/header-logo/header-logo.component';
 
 @NgModule({
   declarations: [
@@ -16,7 +17,8 @@ import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
     LandingPageComponent,
     GamePageComponent,
     SetupGameComponent,
-    CardComponent
+    CardComponent,
+    HeaderLogoComponent
   ],
   imports: [
     BrowserModule,
