@@ -31,6 +31,16 @@ at least after each feature while you work.
 
 You have four hours, starting now.
 
+## UI
+
+![start](./docs/start.png)
+
+![view](./docs/default-view.png)
+
+![match](./docs/default-match.png)
+
+![try](./docs/default-try.png)
+
 ## Angular stuff
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 10.0.6.
