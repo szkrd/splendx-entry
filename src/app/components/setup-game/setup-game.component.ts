@@ -22,7 +22,7 @@ export class SetupGameComponent {
   };
 
   onStartClick() {
-    this.gameService.setDeckSize(this.deckSize);
+    this.gameService.initNewGame(this.deckSize);
     if (this.router.url === '/play') {
       window.location.reload();
     } else {

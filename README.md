@@ -31,6 +31,8 @@ at least after each feature while you work.
 
 You have four hours, starting now.
 
+Limit: `2020-08-20 09:38` - `2020-08-20 13:38`
+
 ## UI
 
 ![start](./docs/start.png)
