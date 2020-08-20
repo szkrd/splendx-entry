@@ -60,6 +60,20 @@
                   "maximumError": "10kb"
                 }
               ]
+            },
+            "production-dummy": {
+              "optimization": false,
+              "outputHashing": "none",
+              "sourceMap": false,
+              "extractCss": false,
+              "namedChunks": false,
+              "showCircularDependencies": false,
+              "aot": false,
+              "extractLicenses": false,
+              "statsJson": false,
+              "progress": false,
+              "vendorChunk": false,
+              "buildOptimizer": false
             }
           }
         },

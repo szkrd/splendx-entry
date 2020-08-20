@@ -5,9 +5,10 @@
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build",
-    "test": "ng test",
-    "lint": "ng lint",
-    "e2e": "ng e2e"
+    "lint:fast": "ng lint",
+    "lint": "ng lint && ng build --configuration=production-dummy",
+    "_test": "ng test",
+    "_e2e": "ng e2e"
   },
   "private": true,
   "dependencies": {

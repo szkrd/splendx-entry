@@ -36,7 +36,7 @@ export class GamePageComponent implements OnDestroy {
   constructor(
     private store: Store<typeof rootReducer>
   ) {
-    this.gameStateChangeSubscription = store.select('game').subscribe(data => this.syncState(data));
+    this.gameStateChangeSubscription = store.select('game').subscribe(data => this.onStateChange(data));
   }
 
   ngOnDestroy() {
@@ -46,7 +46,7 @@ export class GamePageComponent implements OnDestroy {
     }
   }
 
-  syncState = (state) => {
+  onStateChange = (state) => {
     this.currentTries = state.tries;
     this.best = state.best;
     const localCards = this.cards.map(card => card.id).sort().join(',');
