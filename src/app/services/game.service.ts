@@ -18,6 +18,7 @@ class GameState {
   providedIn: 'root'
 })
 export class GameService {
+  readonly REVEAL_TIMEOUT = 1000;
   private _state = new GameState();
   private storage: LocalStorageService;
 

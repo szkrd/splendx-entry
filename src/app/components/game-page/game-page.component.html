@@ -14,9 +14,10 @@
       </p>
       <button>restart</button>
     </div>
-    <ul class="cards">
-      <li *ngFor="let card of cards">
+    <ul class="cards" [class.locked]="uiLocked">
+      <li *ngFor="let card of cards" [@cardAnimation]>
         <app-card
+          (click)="onCardClick(card)"
           [imageId]="card.id"
           [visible]="card.visible"
           [showNumbers]="true"

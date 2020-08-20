@@ -17,7 +17,7 @@ export class SetupGameComponent {
     private router: Router
   ) { }
 
-  onDeckSizeInputChange = ($event) => {
+  onDeckSizeInputChange($event) {
     this.deckSize = parseInt($event.target.value, 10);
   };
 

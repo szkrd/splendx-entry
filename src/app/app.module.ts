@@ -8,6 +8,7 @@ import { GamePageComponent } from './components/game-page/game-page.component';
 import {GameService} from './services/game.service';
 import { SetupGameComponent } from './components/setup-game/setup-game.component';
 import { CardComponent } from './components/card/card.component';
+import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 
 @NgModule({
   declarations: [
@@ -19,6 +20,7 @@ import { CardComponent } from './components/card/card.component';
   ],
   imports: [
     BrowserModule,
+    BrowserAnimationsModule,
     AppRoutingModule
   ],
   providers: [
