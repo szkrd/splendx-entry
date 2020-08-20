@@ -1,1 +1,19 @@
 /* You can add global styles to this file, and also import other style files */
+@import '~normalize.css';
+
+html, body, form, fieldset, table, tr, td, img {
+  font-family: Arial, serif;
+}
+
+input, button, select, textarea, optgroup, option {
+  font-family: inherit;
+}
+
+a:hover {
+  text-decoration: none;
+}
+
+html, body {
+  height: 100%;
+  background-color: #ddd;
+}

@@ -1,0 +1,14 @@
+<div class="setup-game-component" [class.dark]="theme === 'dark'">
+  <label for="deck-size-input">Deck Size ({{deckSize}} pairs)</label>
+  <input
+    type="range"
+    id="deck-size-input"
+    min="3"
+    max="10"
+    [value]="deckSize"
+    (change)="onDeckSizeInputChange($event)"
+  />
+  <button (click)="onStartClick()">
+    start new game
+  </button>
+</div>

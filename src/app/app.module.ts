@@ -6,12 +6,14 @@ import { AppComponent } from './app.component';
 import { LandingPageComponent } from './components/landing-page/landing-page.component';
 import { GamePageComponent } from './components/game-page/game-page.component';
 import {GameService} from './services/game.service';
+import { SetupGameComponent } from './components/setup-game/setup-game.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     LandingPageComponent,
-    GamePageComponent
+    GamePageComponent,
+    SetupGameComponent
   ],
   imports: [
     BrowserModule,

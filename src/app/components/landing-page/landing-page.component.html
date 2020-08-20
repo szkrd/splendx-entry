@@ -1,17 +1,6 @@
 <div class="landing-page-component">
   <main>
     <h1>Splendex Memory game</h1>
-    <label for="deck-size-input">Deck Size ({{deckSize}} pairs)</label>
-    <input
-      type="range"
-      id="deck-size-input"
-      min="3"
-      max="10"
-      [value]="deckSize"
-      (change)="onDeckSizeInputChange($event)"
-    />
-    <button (click)="onStartClick()">
-      start
-    </button>
+    <app-setup-game></app-setup-game>
   </main>
 </div>
