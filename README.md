@@ -1,0 +1,2 @@
+# splendx-entry
+Interview task.
