@@ -1,6 +1,7 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {GameService} from '../../services/game.service';
 import {trigger, style, animate, transition} from '@angular/animations';
+import {Subscription} from 'rxjs';
 
 interface ICard {
   id: number;
@@ -20,20 +21,41 @@ const cardAnimStyle = [style({ opacity: 0, top: 30 }), style({ opacity: 1, top: 
     ])
   ]
 })
-export class GamePageComponent implements OnInit {
+export class GamePageComponent implements OnInit, OnDestroy {
   currentTries = 0;
   best: 0;
   cards: ICard[] = [];
-  private uiLocked = false;
+  uiLocked = false;
+  showSuccessMessage = false;
+  newGameSubscription: Subscription;
 
   constructor(
     private gameService: GameService
   ) { }
 
   ngOnInit() {
+    this.syncState();
+    this.newGameSubscription = this.gameService.newGameInitialized.subscribe(this.syncState);
+  }
+
+  ngOnDestroy() {
+    this.newGameSubscription.unsubscribe();
+  }
+
+  syncState = () => {
     const { state } = this.gameService;
     this.currentTries = state.tries;
-    this.cards = state.cards.map(id => ({ id, visible: false }));
+    const localCards = this.cards.map(card => card.id).sort().join(',');
+    const stateCards = state.cards.map(id => id).sort().join(',');
+    if (localCards !== stateCards) {
+      this.cards = state.cards.map(id => ({ id, visible: false }));
+    }
+  }
+
+  onRestartClick() {
+    this.gameService.initNewGame();
+    this.cards = [];
+    this.syncState();
   }
 
   onCardClick(card: ICard) {
@@ -43,17 +65,25 @@ export class GamePageComponent implements OnInit {
     const otherVisibleCard = this.cards.find(item => item.visible);
     card.visible = true;
     const matching = otherVisibleCard && otherVisibleCard.id === card.id;
+    const finished = matching && this.cards.length === 2;
+    if (otherVisibleCard) {
+      this.gameService.increaseTryCount();
+    }
     if (matching) {
       this.cards = this.cards.filter(item => item.id !== card.id);
-      return;
+      this.gameService.removeCard(card.id);
+      if (finished) {
+        this.showSuccessMessage = true;
+      }
     }
-    if (otherVisibleCard) {
+    if (!matching && otherVisibleCard) {
       this.uiLocked = true;
-      setTimeout(() => {
+      setTimeout(() => { // temporarily leave both cards visible
         this.uiLocked = false;
         otherVisibleCard.visible = false;
         card.visible = false;
       }, this.gameService.REVEAL_TIMEOUT);
     }
+    this.syncState();
   }
 }

@@ -34,3 +34,8 @@ app-card {
 .cards.locked app-card {
   cursor: default;
 }
+
+.success-message {
+  text-align: center;
+  font-size: 30px;
+}

@@ -6,13 +6,15 @@
     <div class="info-bar">
       <p>
         <label>Current tries:</label>
-        <strong>X</strong>
+        <strong>{{currentTries}}</strong>
       </p>
       <p>
         <label>Best:</label>
         <strong>X</strong>
       </p>
-      <button>restart</button>
+      <button (click)="onRestartClick()">
+        restart
+      </button>
     </div>
     <ul class="cards" [class.locked]="uiLocked">
       <li *ngFor="let card of cards" [@cardAnimation]>
@@ -24,5 +26,8 @@
         ></app-card>
       </li>
     </ul>
+    <p class="success-message" *ngIf="showSuccessMessage">
+      You have won the game in {{currentTries}} steps!
+    </p>
   </main>
 </div>

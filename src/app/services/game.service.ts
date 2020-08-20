@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import {EventEmitter, Injectable} from '@angular/core';
 import {LocalStorageService} from './local-storage.service';
 import {UtilsService} from './utils.service';
 
@@ -7,6 +7,7 @@ interface IHighScoreItem {
   best: number;
 }
 
+// no time for observables, sry
 class GameState {
   deckSize = -1;
   cards: number[] = [];
@@ -21,6 +22,7 @@ export class GameService {
   readonly REVEAL_TIMEOUT = 1000;
   private _state = new GameState();
   private storage: LocalStorageService;
+  newGameInitialized: EventEmitter<boolean> = new EventEmitter<boolean>();
 
   constructor(
     private utils: UtilsService
@@ -30,13 +32,25 @@ export class GameService {
   }
 
   initNewGame(n = 0) {
-    this._state.deckSize = n;
+    n = this._state.deckSize = n || this._state.deckSize;
+    this._state.tries = 0;
     const cardIds: number[] = [];
     for (let i = 0; i < n; i++) {
       cardIds.push(i);
       cardIds.push(i);
     }
     this._state.cards = this.utils.arrayShuffle<number>(cardIds);
+    this.saveState();
+    this.newGameInitialized.emit(true);
+  }
+
+  removeCard(id: number) {
+    this._state.cards = this._state.cards.filter(i => i !== id);
+    this.saveState();
+  }
+
+  increaseTryCount() {
+    this._state.tries++;
     this.saveState();
   }
 
