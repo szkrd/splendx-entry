@@ -54,8 +54,31 @@ export class GameService {
     this.saveState();
   }
 
+  saveHighScore() {
+    const state = this._state;
+    const { tries } = state;
+    const score = state.scores.find(score => score.deckSize === state.deckSize);
+    if (!score) {
+      state.scores.push({ best: tries, deckSize: state.deckSize})
+    } else {
+      if (score.best > tries) {
+        score.best = tries;
+      }
+    }
+    this.saveState();
+  }
+
   get state(): GameState {
     return this.utils.simpleClone<GameState>(this._state);
+  }
+
+  get best() {
+    const state = this._state;
+    const score = state.scores.find(score => score.deckSize === state.deckSize);
+    if (!score) {
+      return 0;
+    }
+    return score.best;
   }
 
   private saveState() {

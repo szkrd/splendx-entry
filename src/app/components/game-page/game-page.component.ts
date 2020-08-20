@@ -23,7 +23,7 @@ const cardAnimStyle = [style({ opacity: 0, top: 30 }), style({ opacity: 1, top: 
 })
 export class GamePageComponent implements OnInit, OnDestroy {
   currentTries = 0;
-  best: 0;
+  best = 0;
   cards: ICard[] = [];
   uiLocked = false;
   showSuccessMessage = false;
@@ -35,16 +35,22 @@ export class GamePageComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.syncState();
-    this.newGameSubscription = this.gameService.newGameInitialized.subscribe(this.syncState);
+    this.newGameSubscription = this.gameService.newGameInitialized.subscribe(this.onNewGameInitialized);
   }
 
   ngOnDestroy() {
     this.newGameSubscription.unsubscribe();
   }
 
-  syncState = () => {
+  onNewGameInitialized = () => {
+    this.showSuccessMessage = false;
+    this.syncState();
+  }
+
+  syncState() {
     const { state } = this.gameService;
     this.currentTries = state.tries;
+    this.best = this.gameService.best;
     const localCards = this.cards.map(card => card.id).sort().join(',');
     const stateCards = state.cards.map(id => id).sort().join(',');
     if (localCards !== stateCards) {
@@ -53,6 +59,7 @@ export class GamePageComponent implements OnInit, OnDestroy {
   }
 
   onRestartClick() {
+    this.showSuccessMessage = false;
     this.gameService.initNewGame();
     this.cards = [];
     this.syncState();
@@ -74,6 +81,7 @@ export class GamePageComponent implements OnInit, OnDestroy {
       this.gameService.removeCard(card.id);
       if (finished) {
         this.showSuccessMessage = true;
+        this.gameService.saveHighScore();
       }
     }
     if (!matching && otherVisibleCard) {
